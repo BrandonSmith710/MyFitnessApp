@@ -1,0 +1,1 @@
+web: gunicorn lower:APP -t 120 --preload

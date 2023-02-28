@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+        <script src="https://cdn.plot.ly/plotly-2.17.1.min.js"></script>
+        <link href="{{ url_for('static', filename="css/style_tracker_view.css") }}" rel="stylesheet">
+    </head>
+    <body>
+        <div class="records">
+            {% for rating, note, concern, date in wellness %}
+            <h2>Wellness Rating: {{ rating }}</h2>
+            <p>Date Recorded: {{ date }}</p>
+            <p>Notes: {{ note }}</p>
+            <tr>Concerns: {{ concern }}</tr>
+            {% endfor %}
+        </div>
+        <div>
+            <script src="{{ url_for('static', filename="js/script.js") }}"></script>
+            <p id='data_points'></p>
+            <div id='tester' style="width:1500px;height250px;"></div>
+            {% block javascript %}
+            <script>
+                var ratings = {{ wellness_ratings }};
+                var rn = 15;
+                if (ratings.length >= 15) {
+                    ratings = ratings.slice(ratings.length - 15);
+                } else {
+                    rn = ratings.length;
+                }
+                ratingsToNumbers(ratings);
+                plotRatings(ratings, rn);
+            </script>
+            {% endblock %}
+            <div class="text-center">
+                <form action='tracker_view' method='post'>
+                    <p class="tracker_empty">{{ tracker_empty }}</p>
+                    <button type='submit' class='btn btn-primary'>Tracker Dashboard</button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
